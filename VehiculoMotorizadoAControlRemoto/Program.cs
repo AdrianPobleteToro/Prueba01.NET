@@ -1,107 +1,149 @@
 ﻿using System;
+using System.Collections;
 using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace VehiculoMotorizadoAControlRemoto
 {
     class Program
     {
-        const double estComp = 0.25;
+
+        public static Recubrimiento recubrimiento = new Recubrimiento();
+        public static TipoMotor tipo = new TipoMotor();
+        public static TipoMezclador mezclador = new TipoMezclador();
+        public static double capacidad, litros;//estanque
+        public static int opcion, cc = -1;
+        public static int numRuedas = 0, minDurometro = 0, maxDurometro = 0;
+        public static string idMotor;
+        public static ArrayList autos = new ArrayList();
         static void Main(string[] args)
-        {
-            MenuMotor();
+        {           
+            LogeoUsuario();
         }
 
         public static void LogeoUsuario()
         {
             string usuario = string.Empty;
             string password = string.Empty;
-            bool valido = false;
+            int intentosPermitidos = 3, intentosRealizados = 0;
             Console.WriteLine("Ingresar usuario y contraseña para acceder a la consola.");
-            do
+            while (true)
             {
                 Console.WriteLine("Usuario: ");
                 usuario = Console.ReadLine();
                 Console.WriteLine("Contraseña: ");
                 password = Console.ReadLine();
-
+                intentosRealizados++;
                 if (usuario == "admin" && password == "abc123")
                 {
-                    valido = true;
+                    Console.WriteLine("Logueo realizado.");
+                    MenuAutomovil();
+                    break;
                 }
                 else
                 {
-                    Console.WriteLine("**\n" +
+                    if(intentosPermitidos > intentosRealizados)
+                        Console.WriteLine("**\n" +
                         "Una de las credenciales es incorrecta\n" +
                         "vuelve a intentarlo\n" +
                         "**");
+                    else
+                    {
+                        Console.WriteLine("Limite de intentos alcanzado, la aplicación se cerrará");
+                        Environment.Exit(0);
+                        break;
+                    }
                 }
-
-            } while (valido == false);
-
-            Console.WriteLine("Logueo realizado.");
+            }
         }
 
         public static void MenuAutomovil()
         {
-            Console.WriteLine("CONSTRUCCIÓN DE VEHICULO MOTORIZADO A CONTROL REMOTO");
-            Console.WriteLine("Vehículo: ");
-            /*string marca, int anio, double kilometraje,bool sunroof,int asientos,int ruedas,
-                            int puertas)*/
-            Console.WriteLine("Ingresar marca del vehículo");
-            string marca = Console.ReadLine();
-            Console.WriteLine("Especificar año de vehículo");
-            int anio = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Indicar kilometraje del vehículo");
-            double km = Convert.ToDouble(Console.ReadLine());
-            Console.WriteLine("Posee sunroof? (SI/NO)");
-            string sunroof = Console.ReadLine();
-            bool sunR = false;
-            if (sunroof == "SI")
-                sunR = true;
-            Console.WriteLine("Número de asientos");
-            int nAsientos = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Cuantas ruedas posee el vehículo");
-            int nRuedas = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Número de puertas:");
-            int nPuertas = Convert.ToInt32(Console.ReadLine());
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Construccion de un automovil.");
+                Console.WriteLine("1.- Ingresar Nuevo Automovil");
+                Console.WriteLine("2.- Listar Automovil");
+                Console.WriteLine("3.- Salir de la aplicación");
+                opcion = 0;
+                string input = Console.ReadLine();
+                if (int.TryParse(input, out opcion))
+                {
+                    switch (opcion)
+                    {
+                        case 1:
+                            Console.Clear();
+                            Console.WriteLine("Indicar marca de automovil.");
+                            string marca = Console.ReadLine();
+                            Console.WriteLine("Indicar año de automovil");
+                            int ano = int.Parse(Console.ReadLine());
+                            Console.WriteLine("Indicar kilometraje de automovil");
+                            int kilometraje = int.Parse(Console.ReadLine());
+                            MenuMotor(); 
+                            MenuMezclador();
+                            MenuEstanque();
+                            MenuRueda();
+                            Automovil automovil = new Automovil(idMotor,tipo,cc,marca,ano,kilometraje,
+                                capacidad,mezclador,numRuedas,recubrimiento,minDurometro,maxDurometro);
+                            autos.Add(automovil);
+                            Console.WriteLine("**\n" +
+                                "Ingreso de nuevo automovil realizado con exito.\n" +
+                                "**");
+                            Console.ReadKey();
+                            break;
 
-            Automovil auto1 = new Automovil(marca, anio, km, sunR, nAsientos, nRuedas, nPuertas);
+                        case 2:
+                            Console.Clear();
+                            Console.WriteLine("Lista de autos ingresados:\n" +
+                                "    ");
+                            foreach (Automovil autoNuevo in autos)
+                            {
+                                Console.WriteLine("idMotor: " + autoNuevo.Motor.IdMotor);
+                                Console.WriteLine("Motor: " + autoNuevo.Motor.TipoMotor);
+                                Console.WriteLine("Cilindrada: " + autoNuevo.Motor.Cilindrada);
+                                Console.WriteLine("Marca: " + autoNuevo.Marca);
+                                Console.WriteLine("Año: " + autoNuevo.Ano);
+                                Console.WriteLine("Kilometraje: " + autoNuevo.Kilometraje);
+                                Console.WriteLine("Capacidad Estanque: " + autoNuevo.Estanque.Capacidad);
+                                Console.WriteLine("Mezclador: " + autoNuevo.Mezclador.Tipo);
+                                Console.WriteLine("Recubrimiento de Rueda: " + autoNuevo.Rueda.Recubrimiento);
+                                Console.WriteLine("Rango de durometro: {0} valor mínimo: {1} valor máximo: {2}",
+                                    autoNuevo.Rueda.Durometro, autoNuevo.Rueda.MinDurometro, autoNuevo.Rueda.MaxDurometro);
+                                Console.WriteLine("  \n" +
+                                    ">\n" +
+                                    "  ");
+                            }
+                            Console.ReadKey();
 
-            Console.WriteLine("- Marca: {0} \n" +
-                "- Año: {1} \n" +
-                "- Kilometraje {2} \n" +
-                "- Sunroof {3} \n" +
-                "- Num. Asientos {4} \n" +
-                "- Num. Ruedas {5} \n" +
-                "- Num. Puertas {6}", auto1.Marca, auto1.Anio, auto1.Kilometraje,
-                auto1.Sunroof, auto1.Asientos, auto1.Ruedas, auto1.Puertas);
+                            break;
 
-            Console.Read();
+                        case 3:
+                            Console.WriteLine("Saliendo...");
+                            Environment.Exit(0);
+                            break;
+
+                        default:
+                            Console.WriteLine("Opcion ingresada no válida");
+                            break;
+                    }
+                }
+            }
+
         }
 
         public static void MenuEstanque()
         {
             Console.WriteLine("ESPECIFICACIONES DEL ESTANQUE");
             Console.WriteLine("Indicar capacidad de estanque");
-            double capacidad = Convert.ToDouble(Console.ReadLine());
+            capacidad = double.Parse(Console.ReadLine());
             Console.WriteLine("Indicar cuanto combustible se le desea cargar");
-            double litros = Convert.ToDouble(Console.ReadLine());
-            Console.WriteLine("Estado de carga combustible");
-            Console.WriteLine("");
-
-            Estanque estanqueAuto1 = new Estanque(capacidad, litros);
-
-            Console.WriteLine("- Capacidad estanque: {0} \n" +
-                "- Litros de combustible cargados: {1}lts.", estanqueAuto1.Capacidad, estanqueAuto1.Litros);
-            Console.WriteLine("Estado carga estanque Mitad {0} / Bajo la mitad {1}",
-                estanqueAuto1.MitadCombustible(), estanqueAuto1.BajoCombustible());
-            Console.Read();
+            litros = double.Parse(Console.ReadLine());
         }
 
         public static void MenuMezclador()
         {
-            int opcion = 0;
-            string tipo = string.Empty;
+            opcion = 0;
             do
             {
                 Console.WriteLine("Seleccionar tipo de mezclador: \n" +
@@ -110,7 +152,7 @@ namespace VehiculoMotorizadoAControlRemoto
                     "Solo una opción:");
                 try
                 {
-                    opcion = Convert.ToInt32(Console.ReadLine());
+                    opcion = int.Parse(Console.ReadLine());
                 }
                 catch (Exception)
                 {
@@ -121,10 +163,10 @@ namespace VehiculoMotorizadoAControlRemoto
                     switch(opcion)
                     {
                         case 1:
-                            tipo = "Carburador";
+                            mezclador = TipoMezclador.CARBURADOR;
                             break;
                         case 2:
-                            tipo = "Inyector";
+                            mezclador = TipoMezclador.INYECTOR;
                             break;
                         default:
                             Console.WriteLine("\n" +
@@ -133,28 +175,24 @@ namespace VehiculoMotorizadoAControlRemoto
                             break;
                     }
                 }
-            } while (opcion != 1 && opcion != 2);
-
-
-            Mezclador mezcladorAuto1 = new Mezclador(tipo);
-            Console.WriteLine("-Tipo: {0} \n" +
-                "-Estado Componentes : {1}%", mezcladorAuto1.Tipo, mezcladorAuto1.EstadoComponente * 100);
+            }while (opcion != 1 && opcion != 2);
         }
-
+        
         public static void MenuRueda()
         {
-            int opcion = 0;
-            string tipo = string.Empty;
+            opcion = 0;
             do
             {
                 Console.WriteLine("ESPECIFICACIÓN DE RUEDA DE AUTOMOVIL");
+                Console.WriteLine("Especificar número de ruedas");
+                numRuedas = int.Parse(Console.ReadLine());
                 Console.WriteLine("Seleccionar una opción para el tipo de Recubrimiento \n" +
                     "-Fenol       [1]\n" +
                     "-Hule        [2]\n" +
                     "-Poliuretano [3]");
                 try
                 {
-                    opcion = Convert.ToInt32(Console.ReadLine());
+                    opcion = int.Parse(Console.ReadLine());
                 }
                 catch (Exception)
                 {
@@ -165,13 +203,13 @@ namespace VehiculoMotorizadoAControlRemoto
                     switch (opcion)
                     {
                         case 1:
-                            tipo = "Fenol";
+                            recubrimiento = Recubrimiento.FENOL;
                             break;
                         case 2:
-                            tipo = "Hule";
+                            recubrimiento = Recubrimiento.HULE;
                             break;
                         case 3:
-                            tipo = "Poliuretano";
+                            recubrimiento = Recubrimiento.POLIURETANO;
                             break;
                         default:
                             Console.WriteLine("\n" +
@@ -185,50 +223,36 @@ namespace VehiculoMotorizadoAControlRemoto
 
             } while (opcion != 1 && opcion != 2 && opcion != 3);
 
-            int min = 0, max = 0, durometro = 0;
             Console.WriteLine("Rango del durometro se obtiene indicando el Valor Minimo y Valor máximo");
-            while (durometro == 0)
+            while (true)
             {
                 try
                 {
                     Console.WriteLine("Valor mínimo:");
-                    min = Convert.ToInt32(Console.ReadLine());
+                    minDurometro = int.Parse(Console.ReadLine());
                     Console.WriteLine("Valor máximo:");
-                    max = Convert.ToInt32(Console.ReadLine());
+                    maxDurometro = int.Parse(Console.ReadLine());
                 }
                 catch (Exception)
                 {
                     Console.WriteLine("Error al ingresar datos, deben ser números enteros");
                 }
-                finally
-                {
-                    if (min == max)
-                    {
-                        Console.WriteLine("El número mínimo no debe ser igual al máximo, volver a ingresar.");
-                    }
-                    else if (min < max)
-                    {
-                        durometro = max - min;
-                    }
-                    else
-                    {
-                        Console.WriteLine("El número mínimo no debe ser mayor al máximo, volver a ingresar.");
-                    }
-                }
+                if (minDurometro == maxDurometro)
+                    Console.WriteLine("El número mínimo no debe ser igual al máximo, volver a ingresar.");
+                else if (minDurometro < maxDurometro)
+                    break;
+                else
+                    Console.WriteLine("El número mínimo no debe ser mayor al máximo, volver a ingresar.");
                 Console.WriteLine("");
             }
-            Rueda ruedaAuto1 = new Rueda(tipo, durometro);
-            Console.WriteLine("- Tipo{0}\n" +
-                "- Durómetro {1}\n" +
-                "- Estado Componentes: {2}%", ruedaAuto1.Recubrimiento, ruedaAuto1.Durometro, ruedaAuto1.EstadoComponente * 100);
         }
 
         public static void MenuMotor()
         {
-            int opcion = 0, id = 0;
-            double cc = 0.0;
-            TipoDeMotor tipo = new TipoDeMotor();
+            opcion = 0;
             Console.WriteLine("ESPECIFICACIÓN DEL MOTOR");
+            Console.WriteLine("Indicar id del motor");
+            idMotor = Console.ReadLine();
             do
             {
                 Console.WriteLine("Seleccionar opción del tipo de motor: \n" +
@@ -236,7 +260,7 @@ namespace VehiculoMotorizadoAControlRemoto
                     "Motor de 4 tiempos [2]");
                 try
                 {
-                    opcion = Convert.ToInt32(Console.ReadLine());
+                    opcion = int.Parse(Console.ReadLine());
                 }
                 catch (Exception)
                 {
@@ -247,10 +271,10 @@ namespace VehiculoMotorizadoAControlRemoto
                     switch (opcion)
                     {
                         case 1:
-                            tipo = TipoDeMotor.DOS_TIEMPOS;
+                            tipo = TipoMotor.DOS_TIEMPOS;
                             break;
                         case 2:
-                            tipo = TipoDeMotor.CUATRO_TIEMPOS;
+                            tipo = TipoMotor.CUATRO_TIEMPOS;
                             break;
                         default:
                             Console.WriteLine("\n" +
@@ -261,24 +285,10 @@ namespace VehiculoMotorizadoAControlRemoto
                 }
             } while (opcion != 1 && opcion != 2);
             Console.WriteLine("Indicar el tamaño de la cilindrada");
-            while (cc == 0)
-            {
-                try
-                {
-                    cc = Convert.ToDouble(Console.ReadLine());
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine("Solo se admiten caracteres numéricos, ingresa nuevamente.");
-                }
-            }
-            Motor motorAuto1 = new Motor(++id, tipo, cc);
+            string input = Console.ReadLine();
+            if (!int.TryParse(input, out cc))
+                Console.WriteLine("No se ingresó correctamente el valor indicado, por defecto se le asignó -1");
 
-            Console.WriteLine("- id: {0}\n" +
-                "- Tipo Motor: {1}\n" +
-                "- Cilindrada: {2}cc\n" +
-                "- Estado Componentes: {3}%", motorAuto1.Id, motorAuto1.Tipo,
-                motorAuto1.Cilindrada, motorAuto1.EstadoComponente * 100);
         }
     }
 }

@@ -2,24 +2,25 @@
 
 namespace VehiculoMotorizadoAControlRemoto
 {
-    public abstract class Vehiculo
+    abstract class Vehiculo
     {
-        protected bool _sunroof;
-        protected int _asientos;
-        protected int _ruedas;
-        protected int _puertas;
-
-        protected Vehiculo(bool sunroof, int asientos, int ruedas, int puertas)
+        Motor _motor;
+        Estanque _estanque;
+        Mezclador _mezclador;
+        Rueda _rueda;
+        public Vehiculo(string idMotor, TipoMotor tipoMotor, int cilindrada, double capacidad,
+            TipoMezclador mezclador, int numRuedas, Recubrimiento recubrimiento,
+            int minDurometro, int maxDurometro)
         {
-            _sunroof = sunroof;
-            _asientos = asientos;
-            _ruedas = ruedas;
-            _puertas = puertas;
+            _motor = new Motor(idMotor, tipoMotor, cilindrada);
+            _estanque = new Estanque(capacidad);
+            _mezclador = new Mezclador(mezclador);
+            _rueda = new Rueda(recubrimiento, minDurometro, maxDurometro);
         }
 
-        public bool Sunroof { get => _sunroof; set => _sunroof = value; }
-        public int Asientos { get => _asientos; set => _asientos = value; }
-        public int Ruedas { get => _ruedas; set => _ruedas = value; }
-        public int Puertas { get => _puertas; set => _puertas = value; }
+        public Motor Motor { get => _motor; set => _motor = value; }
+        public Estanque Estanque { get => _estanque; set => _estanque = value; }
+        public Mezclador Mezclador { get => _mezclador; set => _mezclador = value; }
+        public Rueda Rueda { get => _rueda; set => _rueda = value; }
     }
 }

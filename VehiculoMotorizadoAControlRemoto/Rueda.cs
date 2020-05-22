@@ -2,18 +2,30 @@
 
 namespace VehiculoMotorizadoAControlRemoto
 {
+    enum Recubrimiento
+    {
+        FENOL,HULE,POLIURETANO
+    }
     class Rueda : VehiculoComponentes
     {
-        private string _recubrimiento;
+        private Recubrimiento _recubrimiento;
+        private int _numRuedas;
+        private int _minDurometro;
+        private int _maxDurometro;
         private int _durometro;
 
-        public Rueda(string recubrimiento, int durometro)
+        public Rueda(Recubrimiento recubrimiento, int minDurometro, int maxDurometro) : base()
         { 
             _recubrimiento = recubrimiento;
-            _durometro = durometro;
+            _minDurometro = minDurometro;
+            _maxDurometro = maxDurometro;
+            _durometro = MaxDurometro - MinDurometro;
         }
 
-        public string Recubrimiento { get => _recubrimiento; set => _recubrimiento = value; }
+        public Recubrimiento Recubrimiento => _recubrimiento;
+        public int NumRuedas { get => _numRuedas; set => _numRuedas = value; }
+        public int MinDurometro { get => _minDurometro; set => _minDurometro = value; }
+        public int MaxDurometro { get => _maxDurometro; set => _maxDurometro = value; }
         public int Durometro { get => _durometro; set => _durometro = value; }
     }
 }

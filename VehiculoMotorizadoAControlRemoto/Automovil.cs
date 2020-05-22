@@ -1,29 +1,27 @@
 ﻿
-
 namespace VehiculoMotorizadoAControlRemoto
 {
     class Automovil : Vehiculo
     {
-        private static int sunroof;
         private string _marca;
-        private int _anio;
-        private double _kilometraje;
+        private int _ano;
+        private int _kilometraje;
 
-        public Automovil(string marca, int anio, double kilometraje,bool sunroof,int asientos,int ruedas,
-                            int puertas) : base(sunroof, asientos,ruedas,puertas)
+        public Automovil(string idMotor, TipoMotor tipoMotor, int cilindrada,
+                         string marca, int ano, int kilometraje,double capacidad,
+                         TipoMezclador mezclador, int numRuedas, 
+                         Recubrimiento recubrimiento,int minDurometro,
+                         int maxDurometro) : base(idMotor, tipoMotor,
+                         cilindrada,capacidad,mezclador,numRuedas,recubrimiento,minDurometro,
+                         maxDurometro)
         {
             _marca = marca;
-            _anio = anio;
+            _ano = ano;
             _kilometraje = kilometraje;
-            _sunroof = sunroof;
-            _asientos = asientos;
-            _ruedas = ruedas;
-            _puertas = puertas;
         }
 
         public string Marca { get => _marca; set => _marca = value; }
-        public int Anio { get => _anio; set => _anio = value; }
-        public double Kilometraje { get => _kilometraje; set => _kilometraje = value; }
-
+        public int Ano { get => _ano; set => _ano = value; }
+        public int Kilometraje { get => _kilometraje; set => _kilometraje = value; }
     }
 }

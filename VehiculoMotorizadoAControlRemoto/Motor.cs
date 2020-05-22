@@ -1,30 +1,26 @@
-﻿
-
-using System;
+﻿using System;
 
 namespace VehiculoMotorizadoAControlRemoto
 {
-    enum TipoDeMotor
+    enum TipoMotor
     {
         DOS_TIEMPOS,CUATRO_TIEMPOS
     }
     class Motor : VehiculoComponentes
     {
-        private readonly int _id;
-        private TipoDeMotor _tipo;
-        private double _cilindrada;
 
-        
-        public Motor(int id,TipoDeMotor tipo,double cilindrada)
+        private TipoMotor _tipoMotor;
+        private string _idMotor;
+        private int _cilindrada;
+        public Motor(string idMotor, TipoMotor tipoMotor, int cilindrada) : base()
         {
-            _id = id;
-            _tipo = tipo;
+            _idMotor = idMotor;
+            _tipoMotor = tipoMotor;
             _cilindrada = cilindrada;
         }
 
-        public int Id => _id;
-
-        public TipoDeMotor Tipo => _tipo; 
-        public double Cilindrada { get => _cilindrada; set => _cilindrada = value; }
+        public string IdMotor { get => _idMotor; set => _idMotor = value; }
+        public int Cilindrada { get => _cilindrada; set => _cilindrada = value; }
+        public TipoMotor TipoMotor => _tipoMotor;
     }
 }

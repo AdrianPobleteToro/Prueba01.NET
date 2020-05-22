@@ -1,16 +1,20 @@
 ﻿
-
 namespace VehiculoMotorizadoAControlRemoto
 {
+    enum TipoMezclador
+    {
+        CARBURADOR,INYECTOR
+    }
     class Mezclador : VehiculoComponentes
     {
-        private string _tipo;
+        private TipoMezclador _tipo;
 
-        public Mezclador(string tipo)
+
+        public Mezclador(TipoMezclador tipo) : base()
         {
             _tipo = tipo;
         }
 
-        public string Tipo { get => _tipo; set => _tipo = value; }
+        public TipoMezclador Tipo => _tipo;
     }
 }

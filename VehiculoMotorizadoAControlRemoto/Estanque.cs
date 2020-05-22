@@ -6,18 +6,18 @@ namespace VehiculoMotorizadoAControlRemoto
 {
     class Estanque : VehiculoComponentes
     {
-        private double _capacidad;
+        private readonly double _capacidad;
         private double _litros;
 
         
-        public Estanque(double capacidad, double litros)
+        public Estanque(double capacidad)
         {
             _capacidad = capacidad;
-            _litros = litros;
         }
 
-        public double Capacidad { get => _capacidad; set => _capacidad = value; }
         public double Litros { get => _litros; set => _litros = value; }
+
+        public double Capacidad => _capacidad;
 
 
         /* Método “MitadCombustible” que retorne un 
@@ -43,8 +43,5 @@ namespace VehiculoMotorizadoAControlRemoto
 
             return false;
         }
-
-
-
     }
 }
